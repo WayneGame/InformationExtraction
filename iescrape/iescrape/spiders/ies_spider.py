@@ -10,11 +10,6 @@ class IeSpider(scrapy.Spider):
 
     def parse(self, response):
         for citys in response.css('table li')[:26]:
-            #yield{
-            #    'type': "City_category",
-            #    'name': citys.css('a::text').get(),
-            #    'type': citys.css('a::attr(href)').get()
-            #}
             next_site = citys.css('a::attr(href)').get('').strip()
             if next_site is not None and next_site != 'http://www.seo-factory.de' and next_site != 'http://postleitzahl-plz.verzeichniss.net' and next_site != 'http://www.lasershow24.de/robots.txt':
                 try:
