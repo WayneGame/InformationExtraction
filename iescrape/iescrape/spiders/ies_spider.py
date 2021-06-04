@@ -1,5 +1,5 @@
 import scrapy
-
+"""
 class IeSpider(scrapy.Spider):
     name = "ie"
 
@@ -38,4 +38,23 @@ class IeSpider(scrapy.Spider):
                 'link': link,
                 'name': city_name
             }
+"""
 
+class IeSpider(scrapy.Spider):
+    name = "ie"
+
+    start_urls=[
+        "http://www.landraete.de/"
+    ]
+
+
+    def parse(self, response):
+        for citys in response.css('table tr'):
+            link = citys.css('td a::text').get()
+            city_name = citys.css('td::text').get()
+            if link != 'Zum Seitenanfang' and link is not None:
+                yield {
+                    'type': "Kreis",
+                    'link': link,
+                    'name': city_name
+                }
