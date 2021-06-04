@@ -1,4 +1,6 @@
 import scrapy
+from scrapy.linkextractors import LinkExtractor
+from scrapy.spiders import Rule
 """
 class IeSpider(scrapy.Spider):
     name = "ie"
@@ -39,7 +41,7 @@ class IeSpider(scrapy.Spider):
                 'name': city_name
             }
 """
-
+"""
 class IeSpider(scrapy.Spider):
     name = "ie"
 
@@ -58,3 +60,18 @@ class IeSpider(scrapy.Spider):
                     'link': link,
                     'name': city_name
                 }
+"""
+
+class IeSpider(scrapy.Spider):
+    name = "ie"
+
+    allowed_domains = ['books.toscrape.com']
+    start_urls = ['http://books.toscrape.com/']
+    base_url = 'http://books.toscrape.com/'
+    rules = [Rule(LinkExtractor(allow='catalogue/'),
+                  callback='parse_item', follow=True)]
+
+    def parse_item(self, response):
+        print("URL: " + response.url)
+        with open("test.html", 'wb') as f:
+            f.write(response.url)

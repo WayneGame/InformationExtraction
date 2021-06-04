@@ -24,7 +24,7 @@ print()
 from newsplease import NewsPlease
 import os 
 
-article = NewsPlease.from_url('https://www.hessen.de/presse/pressemitteilung/hessen-setzt-bundesinfektionsschutzgesetz-um-0')
+article = NewsPlease.from_url('https://www.lra-aoe.de/informationen-zu-corona/dummy')
 print("Von news please:")
 print()
 print(article.title)
