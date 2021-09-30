@@ -1,0 +1,124 @@
+<head>
+    <title>Orte und Daten erkennen...</title>
+    <meta charset="utf-8">
+
+    
+    <link rel="icon" href="https://ivolino.de/pivolo/img/LOGO2.png" type="image/png" sizes="32x32">
+    <!-- VENDOR CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/vivify.min.css">
+    
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="css/site.min.css">
+    
+    <style type="text/css">.jqstooltip { position: absolute;left: 0px;top: 0px;visibility: hidden;background: rgb(0, 0, 0) transparent;background-color: rgba(0,0,0,0.6);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";color: white;font: 10px arial, san serif;text-align: left;white-space: nowrap;padding: 5px;border: 1px solid white;box-sizing: content-box;z-index: 10000;}.jqsfield { color: white;font: 10px arial, san serif;text-align: left;}</style>
+</head>
+
+<body class="theme-cyan font-montserrat light_version">
+    <div class="chatapp_body">
+        <div class="chat-header clearfix">
+            <div class="row clearfix">
+                <div class="col-lg-12">
+                    <div class="chat-about">
+                        <h6 class="m-b-0">Orte und Daten erkennen...</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="chat-history" class="chat-history" style="overflow-y: scroll; height: 70%;">
+            <ul class="message_data" id="chat" >
+            </ul>
+        </div>
+        <div class="chat-message clearfix">
+            <div class="input-group mb-0">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <a href="javascript:void(0);" class="btn btn-link" onclick="sendText()"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>
+                    </span>
+                </div>
+                <textarea id="text_field" type="text" row="" class="form-control" placeholder="Auf geht die wilde Fahrt..."></textarea>
+            </div>
+        </div>
+    </div>    
+    <script>
+            function sendText(){
+                request_text = document.getElementById("text_field").value
+                addQuestionText(request_text, "Meine Anfrage")
+            
+
+                fetch("http://127.0.0.1:9999/predict", {method: 'POST', headers: {"Content-Type": "application/json"}, body: JSON.stringify({'text': request_text})}).then(function(response) {
+                    console.log(response);
+                    response.text().then(function(text) {
+                        var entity = JSON.parse(text)["response"]
+                        console.log(entity["pred"][0])
+                        text1 = ""
+                        if (entity["label"].length > 0) {
+                            text1 = text1 + " Label ID: " +  entity["label"] + ".<br> "
+                        }
+                        if (entity["label_"].length > 0) {
+                            text1 = text1 + " Label Text: " +  entity["label_"] + ". – " + (parseFloat(entity["pred"]) * 100).toString().substring(0,5) + "%."
+                        }
+
+                        text2 = entity["time_taken"].substring(0,5) + " sek."
+                        addResponseText(text1, text2)
+
+                        document.getElementById("text_field").value = ""
+                        document.getElementById("chat-history").scrollTop = document.getElementById("chat-history").scrollHeight;;
+                    });
+                });
+                
+            }
+            function addQuestionText(text, text2) {
+                var ul = document.getElementById("chat");
+
+                var li = document.createElement("li");
+                li.classList.add("right","clearfix")
+                var img = document.createElement("img")
+                img.classList.add("user_pix")
+                img.src = "css/user_1.png"
+                img.alt = "avatar"
+
+                var div = document.createElement("div")
+                div.classList.add("message")
+                span = document.createElement("span")
+                span.innerHTML = text
+
+                var span2 = document.createElement("span")
+                span2.classList.add("data_time")
+                span2.innerHTML = text2
+                
+                div.appendChild(span)
+                li.appendChild(img)
+                li.appendChild(div)
+                li.appendChild(span2)
+                ul.appendChild(li)
+            }
+
+            function addResponseText(text, text2) {
+                var ul = document.getElementById("chat");
+
+                var li = document.createElement("li");
+                li.classList.add("left","clearfix")
+                var img = document.createElement("img")
+                img.classList.add("user_pix")
+                img.src = "css/user_2.png"
+                img.alt = "avatar"
+
+                var div = document.createElement("div")
+                div.classList.add("message")
+                span = document.createElement("span")
+                span.innerHTML = text
+
+                var span2 = document.createElement("span")
+                span2.classList.add("data_time")
+                span2.innerHTML = text2
+                
+                div.appendChild(span)
+                li.appendChild(img)
+                li.appendChild(div)
+                li.appendChild(span2)
+                ul.appendChild(li)
+            }
+    </script>
+</body>
