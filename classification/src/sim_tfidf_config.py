@@ -31,5 +31,5 @@ THEMEN = {
     "schule": ["uni", "mensa", "semester", "studium", "prüfung", "schüler"]
     }
 
-# TODO: Zuprnung Städte zu Ländern
+# TODO: Zuornung Städte zu Ländern
 # Probleme mit Plural (z.B. Museen, Schwimmbäder, ...), etc. 

@@ -1,4 +1,4 @@
-MAX_LENGTH = 128  # Maximum length of input sentence to the model.
+MAX_LENGTH = 128  # Max Länge des Input Satzes
 BATCH_SIZE = 32
 EPOCHS = 2 # Bert neigt bei mehreren Epoch zur Überanpassung
 BERT_MODEL = "bert-base-german-cased"

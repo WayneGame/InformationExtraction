@@ -183,7 +183,7 @@ def load_tokenizer(filename):
 
 
 def test_new_example(model, tokenizer, le, text_input):
-    X_example = transform_text(tokenizer, [text_input]) # im Original new_example => text_input
+    X_example = transform_text(tokenizer, [text_input])
     label_array = model.predict(X_example)
     new_label = np.argmax(label_array, axis=-1)
     print(new_label)
@@ -202,7 +202,7 @@ def predict():
 
     start_time = time.time()
     
-    X_example = transform_text(tokenizer, info) # im Original new_example => text_input
+    X_example = transform_text(tokenizer, info)
     label_array = model.predict(X_example)
     new_label = np.argmax(label_array, axis=-1)
 

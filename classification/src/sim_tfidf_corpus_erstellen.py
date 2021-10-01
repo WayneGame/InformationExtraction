@@ -22,13 +22,12 @@ def pre_process(url):
     h_elements = utils.get_h_elements(html)
     
     # TODO: ist für den BERT corpus test erstmal ausgeklammert
-    """"
     link = utils.add_keywords(link)
     body = utils.add_keywords(body)
     meta = utils.add_keywords(meta)
     title = utils.add_keywords(title)
     h_elements = utils.add_keywords(h_elements)
-    """
+
     return {
             "url"  : url,
             "link" : link,

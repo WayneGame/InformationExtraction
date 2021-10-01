@@ -93,8 +93,6 @@ def initBERT():
     Anschließendes iterieren über diese Liste und vergleich mit dem Embedding der Query mit den Listeneinträgen
     und speichern der Summer der besten k Scores / k  samt dem Index in einer weiteren Liste -> 
     """
-    # TODO: Fuck, der Dreck ist schon preprocessed :( => corpus neu erstellen für Bert
-
     # Ausdruck zum Teilen von Sätzen. So bleibt beispielsweise U.S. in einem Satz oder 1. 
     sentence_splitter = re.compile('(?<!\d\.)(?<!\w\.\w.)(?<=\.|\?|\:).{0,1}\s\W{0,1}')
     for idx, row in tqdm(corpus.iterrows(), total=len(corpus)):
@@ -144,6 +142,7 @@ sentence1und2 sind dicts
     "token_type_ids": xx
 }
 """
+# Test, ob es sinn macht die Embeddings vorher zu berechnen und sie dann nur zu verbinden
 def combine_sentences_for_bert(sentence1, sentence2):
     max_length = 128
 
@@ -229,7 +228,8 @@ def getTopNBERTArticles_entailment(query, n, n_sentences, bm25=True, rerank=10):
 
 
 
-# TODO: Die ganze Sache ließe sich erheblich beschleunigen, wenn man die embeddings des Corpus vorher berechnen würde 
+# TODO: Die ganze Sache ließe sich erheblich beschleunigen, wenn man die embeddings des Corpus vorher berechnen würde
+# Update, selbst dann nicht wirklich :(
 def getTopNBERTArticles(query, n, clean=True):
     global corpus
 
@@ -376,9 +376,7 @@ def calc_mAPkScore(k=5, algo="BM25", n_sentences=5, rerank=10, rerank_bm25=True)
             urls = getTopNSpaCyArticles(query=question["question"], n=-1)
         else: #BERT
             urls = getTopNBERTArticles_entailment(query=question["question"], n=-1, n_sentences=n_sentences, rerank=rerank, bm25=rerank_bm25)
-            # TODO entfernen, da das sonst viiiiiel zu lange dauert
-            if tina > 10:
-                break
+
 
 
         # jetzt wird geschaut, an welcher Stelle der gesuchte Artikel ist.
@@ -415,9 +413,7 @@ def calc_MRRScore(algo="BM25", n_sentences=5, rerank_bm25=True, rerank=10):
             urls = getTopNSpaCyArticles(query=question["question"], n=-1)
         else: #BERT
             urls = getTopNBERTArticles_entailment(query=question["question"], n=-1, n_sentences=n_sentences, rerank=rerank, bm25=rerank_bm25)
-            # TODO Tina entfernen
-            if tina > 10:
-                break
+
 
         # jetzt wird geschaut, an welcher Stelle der gesuchte Artikel ist.
         counter = counter + 1
@@ -446,9 +442,7 @@ def calc_HasPositive(k=5, algo="BM25", n_sentences=5, rerank=10, rerank_bm25=Tru
             urls = getTopNSpaCyArticles(query=question["question"], n=-1)
         else: #BERT
             urls = getTopNBERTArticles_entailment(query=question["question"], n=-1, n_sentences=n_sentences, rerank=rerank, bm25=rerank_bm25)
-            #TODO tina entfernen
-            if tina > 10:
-                break
+
         counter = counter + 1
         # jetzt wird geschaut, an welcher Stelle der gesuchte Artikel ist.
         for j, url in enumerate(urls):
@@ -562,7 +556,7 @@ def calcBenchmarks2():
 
 def calcBenchmarks():
     for rerank in [10, 20, 50]:
-        for n_sentences in [3,4]:
+        for n_sentences in [3,4,5,6]:
             mapK = [1, 3, 5, 10, 20, -1]
             print("Calculating map@k Score:")
             for k in mapK:
@@ -587,7 +581,8 @@ def calcBenchmarks():
 
 if __name__ == "__main__":
     #init(bert="bert")
+    # Dauert eeeeeeeeeewig, nicht plausibel
     #calcBenchmarks()
     
-    init(bert="all")
+    init()
     calcBenchmarks2()
